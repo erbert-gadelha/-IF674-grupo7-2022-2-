@@ -7,11 +7,11 @@ module mux_ulaA(
     output wire [31:0]  Data_out // saida    
 );
     // Modo instantaneo pra fazer combinacoes - assing -
-    // No momento que der as entradas, o resultado já sai logo.
-    // Não precisa de um ciclo de clock de espera 
+    // No momento que der as entradas, o resultado jï¿½ sai logo.
+    // Nao precisa de um ciclo de clock de espera 
 
-
-    // Dá o bit selector, se verdadeiro ou falso 
+    // Le o bit selector, se verdadeiro ou falso 
     // se for 1, eh Data_1, se for 0, eh Data_0
+
     assign Data_out = (selector) ? Data_1 : Data_0;
 endmodule

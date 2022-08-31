@@ -1,0 +1,8 @@
+module EPC (	input reg flag1,
+		input reg flag2,
+		input reg flag3,
+		input[31:0]PC);
+
+
+endmodule
+ 

@@ -16,9 +16,9 @@ module ctrl_unit(
     // Registradores de variaveis 
     output reg    PC_w, 
     output reg    MEM_w,
-    output reg    IR_w,
-    output reg    RB_w,
-    output reg    AB_w,
+    output reg    IR_w, 
+    output reg    RB_w, 
+    output reg    AB_w, 
 
     // Controladores com mais de 1 bit
     output reg [2:0]    ULA_c,
@@ -45,15 +45,15 @@ reg [1:0] STATE;
 
 // Parametros (constantes)
 // Estados principais da maquina 
-parameter ST_COMMON = 2'b00;
-parameter ST_ADD = 2'b01;
-parameter ST_ADDI = 2'b10;
+parameter ST_COMMON= 2'b00;
+parameter ST_ADD   = 2'b01;
+parameter ST_ADDI  = 2'b10;
 parameter ST_RESET = 2'b11;
 
 // Opcode
-parameter ADD = 6'b000000;
+parameter ADD  = 6'b000000;
 parameter ADDI = 6'b001000;
-parameter RESET = 6'b111111;
+parameter RESET= 6'b111111;
 
 
 
