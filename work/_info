@@ -10,190 +10,468 @@ z2
 !i10f 100
 cModel Technology
 dC:/intelFPGA/20.1
-vcpu_add
-Z0 !s110 1661821105
+Ebanco_reg
+Z0 w1636515642
+Z1 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 81
+Z4 dC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7
+Z5 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Banco_reg.vhd
+Z6 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Banco_reg.vhd
+l0
+L69 1
+V:adHbk0Ym0TAKYW83J5Y[3
+!s100 hZ46CT_BzQl8j]02_Vf=o2
+Z7 OV;C;2020.1;71
+32
+Z8 !s110 1661993738
 !i10b 1
-!s100 G9EolmGN6SLDfm2Sfk_aV1
-Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
-IXJH7Q5h?em;`NZeUAIbF]2
-Z2 VDg1SIo80bB@j0V0VzS_@n1
-Z3 dC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7
-w1661650035
-8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v
-FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v
-!i122 40
-L0 1 239
-Z4 OV;L;2020.1;71
-r1
-!s85 0
-31
-Z5 !s108 1661821105.000000
-!s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v|
-!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v|
+Z9 !s108 1661993738.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Banco_reg.vhd|
+Z11 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Banco_reg.vhd|
 !i113 1
-Z6 o-work work
-Z7 tCvgOpt 0
-vctrl_unit
-!s110 1661966717
-!i10b 1
-!s100 akOk8M1oA=ljFYI>c>kbQ2
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Abehavioral_arch
 R1
-Ig6K=Uh^VNdYD^9S0Pi;983
 R2
 R3
-w1661893330
-8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v
-FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v
-!i122 45
-L0 1 366
+DEx4 work 9 banco_reg 0 22 :adHbk0Ym0TAKYW83J5Y[3
+!i122 81
+l93
+L85 34
+VY7l=BkTbhRVIWWGL4mMo60
+!s100 RmVnX=Z0eZ>VP`R`^LJ]Q1
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+vcpu_add
+!s110 1661993961
+!i10b 1
+!s100 DPS;<EOkfXO[`5l0BM4[B3
+Z14 !s11b Dg1SIo80bB@j0V0VzS_@n1
+InN5^03c67Rm94Mlm^bPB;1
+Z15 VDg1SIo80bB@j0V0VzS_@n1
 R4
+w1661993956
+8C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\cpu_add.v
+FC:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\cpu_add.v
+!i122 88
+L0 1 241
+Z16 OV;L;2020.1;71
 r1
 !s85 0
 31
-!s108 1661966717.000000
+!s108 1661993961.000000
+!s107 C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\cpu_add.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\cpu_add.v|
+!i113 1
+Z17 o-work work
+Z18 tCvgOpt 0
+vctrl_unit
+!s110 1661993740
+!i10b 1
+!s100 akOk8M1oA=ljFYI>c>kbQ2
+R14
+Ig6K=Uh^VNdYD^9S0Pi;983
+R15
+R4
+w1661991804
+8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v
+FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v
+!i122 87
+L0 1 366
+R16
+r1
+!s85 0
+31
+Z19 !s108 1661993739.000000
 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v|
 !i113 1
-R6
-R7
+R17
+R18
 vEPC
-!s110 1661966709
+R8
 !i10b 1
 !s100 gNkZFP[]Cn0^F>KAm:hED2
-R1
-Io@G69:97RoCPRKjl;8<oJ2
-R2
-R3
-w1661966704
-8C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\EPC.v
-FC:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\EPC.v
-!i122 44
-L0 2 30
+R14
+I7Z:QC<nlz2=FCA;U4?LSF1
+R15
 R4
+w1661966704
+8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/EPC.v
+FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/EPC.v
+!i122 79
+L0 2 30
+R16
 r1
 !s85 0
 31
-!s108 1661966709.000000
-!s107 C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\EPC.v|
-!s90 -reportprogress|300|-work|work|-stats=none|C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\EPC.v|
+R9
+!s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/EPC.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/EPC.v|
 !i113 1
-R6
-R7
+R17
+R18
 n@e@p@c
+Einstr_reg
+Z20 w1661884400
+R2
+R3
+!i122 82
+R4
+Z21 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Instr_Reg.vhd
+Z22 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Instr_Reg.vhd
+l0
+L42 1
+VAfV1kYS402dnLRiFO;Z7_2
+!s100 _X]FAEHlMn?]L[?c6kUO?1
+R7
+32
+Z23 !s110 1661993739
+!i10b 1
+R19
+Z24 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Instr_Reg.vhd|
+Z25 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Instr_Reg.vhd|
+!i113 1
+R12
+R13
+Abehavioral_arch
+R2
+R3
+DEx4 work 9 instr_reg 0 22 AfV1kYS402dnLRiFO;Z7_2
+!i122 82
+l58
+L56 31
+Vel<a?8[M;ESLdnhcMKeiV2
+!s100 dmI0n4gcHF>lfnAHQe9hW0
+R7
+32
+R23
+!i10b 1
+R19
+R24
+R25
+!i113 1
+R12
+R13
+Ememoria
+Z26 w1636599106
+Z27 DPx4 work 13 ram_constants 0 22 BbIcggj=<H_W75Jb?WIoZ0
+Z28 DPx3 lpm 14 lpm_components 0 22 jlWe>e^2@cAI7EQaRX2E;1
+R1
+R2
+R3
+!i122 83
+R4
+Z29 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Memoria.vhd
+Z30 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Memoria.vhd
+l0
+L67 1
+V<[RFRXeHV^PMOiiinkBoS0
+!s100 __XEo>II7SFLX6Xa7VZA63
+R7
+32
+R23
+!i10b 1
+R19
+Z31 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Memoria.vhd|
+Z32 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Memoria.vhd|
+!i113 1
+R12
+R13
+Abehavioral_arch
+R27
+R28
+R1
+R2
+R3
+DEx4 work 7 memoria 0 22 <[RFRXeHV^PMOiiinkBoS0
+!i122 83
+l103
+L79 78
+VR9W83dOfA7lWR9j>i6THA2
+!s100 aLo:Seezh^aEQ@MaJf[__3
+R7
+32
+R23
+!i10b 1
+R19
+R31
+R32
+!i113 1
+R12
+R13
 vmux_ulaA
-!s110 1661821104
+!s110 1661993737
 !i10b 1
 !s100 4cJaOIWW800MgNM7PI?e`0
-R1
+R14
 I?<6DMV2deKLb]UF]7:PU43
-R2
-R3
-w1661649537
+R15
+R4
+w1661968321
 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaA.vhd
 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaA.vhd
-!i122 35
+!i122 74
 L0 1 17
-R4
+R16
 r1
 !s85 0
 31
-!s108 1661821104.000000
+Z33 !s108 1661993737.000000
 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaA.vhd|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaA.vhd|
 !i113 1
-R6
-R7
+R17
+R18
 nmux_ula@a
 vmux_ulaB
-!s110 1661966442
+R8
 !i10b 1
 !s100 @eAGf7H=@VCJjTl>CnK`22
-R1
+R14
 Igo2IfWH]bIK09aMDNaR492
-R2
-R3
+R15
+R4
 w1661821118
 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaB.v
 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaB.v
-!i122 43
+!i122 75
 L0 1 10
-R4
+R16
 r1
 !s85 0
 31
-!s108 1661966441.000000
+R33
 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaB.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaB.v|
 !i113 1
-R6
-R7
+R17
+R18
 nmux_ula@b
 vmux_writereg
-R0
+R8
 !i10b 1
 !s100 cGTFC2A`hD4E0`DZcU<Bo2
-R1
-I`dnE7Ei:Oh<h3MQl]fX922
-R2
-R3
-Z8 w1661564846
-8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v
-FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v
-!i122 38
-L0 1 14
+R14
+IHJDS;kS<amDL]ngYb]=Kl3
+R15
 R4
+Z34 w1661564846
+8C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\mux_writereg.v
+FC:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\mux_writereg.v
+!i122 76
+L0 1 14
+R16
 r1
 !s85 0
 31
-R5
-!s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v|
-!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v|
+R9
+!s107 C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\mux_writereg.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\mux_writereg.v|
 !i113 1
-R6
+R17
+R18
+Pram_constants
+!i122 83
+R26
+R4
+R29
+R30
+l0
+L47 1
+VBbIcggj=<H_W75Jb?WIoZ0
+!s100 5;`Z:D@MR5CT6j_[c9;6h3
 R7
+32
+R23
+!i10b 1
+R19
+R31
+R32
+!i113 1
+R12
+R13
+Eregdesloc
+Z35 w1636598986
+R1
+R2
+R3
+!i122 84
+R4
+Z36 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/RegDesloc.vhd
+Z37 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/RegDesloc.vhd
+l0
+L80 1
+V4GibeROOKf]^CUjTE67Bo0
+!s100 =0ZG0kkZKT?Zo?iX2R9=P1
+R7
+32
+R23
+!i10b 1
+R19
+Z38 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/RegDesloc.vhd|
+Z39 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/RegDesloc.vhd|
+!i113 1
+R12
+R13
+Abehavioral_arch
+R1
+R2
+R3
+DEx4 work 9 regdesloc 0 22 4GibeROOKf]^CUjTE67Bo0
+!i122 84
+l98
+L93 38
+VDFCTADkAb^4XhT09kD<k32
+!s100 3`2HClJO^bJLd6@PodWh?3
+R7
+32
+R23
+!i10b 1
+R19
+R38
+R39
+!i113 1
+R12
+R13
+Eregistrador
+Z40 w1219114184
+R2
+R3
+!i122 85
+R4
+Z41 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Registrador.vhd
+Z42 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Registrador.vhd
+l0
+L53 1
+VD=`aG^VOPEDP69ifb8G;52
+!s100 ^e8=Z<CbNTLXR@XGZJMQo3
+R7
+32
+R23
+!i10b 1
+R19
+Z43 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Registrador.vhd|
+Z44 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Registrador.vhd|
+!i113 1
+R12
+R13
+Abehavioral_arch
+R2
+R3
+DEx4 work 11 registrador 0 22 D=`aG^VOPEDP69ifb8G;52
+!i122 85
+l66
+L65 19
+V<kVfXRZJUh40ja<<lN_3:3
+!s100 EXKKzlBL1ARAk5TCN4`Vg2
+R7
+32
+R23
+!i10b 1
+R19
+R43
+R44
+!i113 1
+R12
+R13
 vsign_extend_16
-R0
+R8
 !i10b 1
 !s100 C1WR>WbAno5CPUQ00>GeO3
-R1
+R14
 IWT6@?eVQ^gzK2`k>OOIa<0
-R2
-R3
-R8
+R15
+R4
+R34
 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v
 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v
-!i122 39
+!i122 77
 L0 1 19
-R4
+R16
 r1
 !s85 0
 31
-R5
+R9
 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v|
 !i113 1
-R6
-R7
-vunidade_controle
-!s110 1661966418
-!i10b 1
-!s100 z6^:<L`zQH6OUS4KYbCFM1
+R17
+R18
+Eula32
+Z45 w1636599050
 R1
-IOIdfd5Jd`az60Y_5hGK6<1
 R2
 R3
-w1661966412
+!i122 86
+R4
+Z46 8C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula32.vhd
+Z47 FC:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula32.vhd
+l0
+L63 1
+VM1`EhBco;Cb9<:6CC>b?e2
+!s100 bGmbVJaTC>R`I<lBgn7@L3
+R7
+32
+R23
+!i10b 1
+R19
+Z48 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula32.vhd|
+Z49 !s107 C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula32.vhd|
+!i113 1
+R12
+R13
+Abehavioral
+R1
+R2
+R3
+DEx4 work 5 ula32 0 22 M1`EhBco;Cb9<:6CC>b?e2
+!i122 86
+l89
+L79 138
+VF94M;2UJ^55hCen3Z[Kfk0
+!s100 1E>E2KjDKb=5dkES8U2ha0
+R7
+32
+R23
+!i10b 1
+R19
+R48
+R49
+!i113 1
+R12
+R13
+vunidade_controle
+R8
+!i10b 1
+!s100 `klTH]c@di5G4Q4UXk;lV0
+R14
+IBmdX34JWib`:lUU_g9Lb?1
+R15
+R4
+w1661993088
 8C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\unidade_controle.v
 FC:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\unidade_controle.v
-!i122 42
-L0 1 184
-R4
+!i122 80
+L0 1 174
+R16
 r1
 !s85 0
 31
-!s108 1661966418.000000
+R9
 !s107 C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\unidade_controle.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\unidade_controle.v|
 !i113 1
-R6
-R7
+R17
+R18

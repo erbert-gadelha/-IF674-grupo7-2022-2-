@@ -47,61 +47,44 @@ parameter ADD = 6'b000000;
 parameter ADDI = 6'b001000;
 parameter RESET = 6'b111111;
 
-
 // Tambem deve resetar pilha
 initial begin
     reset_out = 1'b1;
 end
 
 
+
+
 always @(posedge clk) begin
 
-    // Apertei o botao de reset
-    if (reset == 1'b1)
-    begin
-      if (STATE != ST_RESET) begin
+    if (reset == 1'b1) begin // ENQUANTO reset ESTIVER PRESSIONADO
+        if (STATE != ST_RESET) begin
             STATE = ST_RESET;
-
-            PC_w = 1'b0;
-            MEM_w = 1'b0;
-            IR_w = 1'b0;
-            RB_w = 1'b0;
-            AB_w = 1'b0;
-            ULA_c = 3'b000;
-            M_WREG = 1'b0;
-            M_ULAA = 1'b0;
-            M_ULAB = 2'b00;
-
             reset_out = 1'b1;
-            COUNTER = 3'b000;
+        end else begin
+            STATE = ST_COMMON;
+            reset_out = 1'b0;
         end
 
-        else begin
-                STATE = ST_COMMON;
-                
-                PC_w = 1'b0;
-                MEM_w = 1'b0;
-                IR_w = 1'b0;
-                RB_w = 1'b0;
-                AB_w = 1'b0;
-                ULA_c = 3'b000;
-                M_WREG = 1'b0;
-                M_ULAA = 1'b0;
-                M_ULAB = 2'b00;
-                
-                reset_out = 1'b0;
-                COUNTER = 3'b000;
-            
-        end
+        // MANTEM VALORES ZERADOS
+        PC_w = 1'b0;
+        MEM_w = 1'b0;
+        IR_w = 1'b0;
+        RB_w = 1'b0;
+        AB_w = 1'b0;
+        ULA_c = 3'b000;
+        M_WREG = 1'b0;
+        M_ULAA = 1'b0;
+        M_ULAB = 2'b00;
+        COUNTER = 3'b000;
     end
-
-
-    // OUTROS ESTADOS QUE O NAO O [reset]
-    else begin
+    
+    
+    
+    else begin // FORA DO reset
 
         case (STATE)
-            ST_COMMON:
-            begin // ZERA TUDO
+            ST_COMMON: begin // ZERA TUDO
                 PC_w = 1'b0;    
                 MEM_w = 1'b0;   
                 IR_w = 1'b0;    
@@ -115,54 +98,61 @@ always @(posedge clk) begin
                 COUNTER = 0;
             end
 
-            ST_ULA:
-            begin
-                if(COUNTER == 2'd1) begin //Read A e B
-                    PC_w = 1'b0;    
+            ST_ULA: begin
+                if(COUNTER == 2'd1 & COUNTER == 2'd2 & COUNTER == 2'd3) begin //Read A e B - Seleciona mux
+                    PC_w = 1'b0;
                     MEM_w = 1'b0;   
                     IR_w = 1'b0;    
                     RB_w = 1'b0;    
-                    AB_w = 1'b0;    // AB?
-                    ULA_c = 3'b000; // ULAcontrol? se sim pode ser passado aqui o OPCODE
+                    AB_w = 1'b0;
+                    ULA_c = 3'b000;
+                    
+                    if(OPCODE == 6'd0)
+                        M_ULAB = 2'd00;
+                    else
+                        M_ULAB = 2'd02;
+                    
                     M_WREG = 1'b0;  
-                    M_ULAA = 1'b1;  
-                    M_ULAB = 2'b00; 
+                    M_ULAA = 1'b1;
                     reset_out = 1'b0; 
                     COUNTER = COUNTER + 1;
                 end else
-                if(COUNTER == 2'd2) begin //Roda ULA
-                    PC_w = 1'b0;    
+                if(COUNTER == 2'd4 & COUNTER == 2'd5 & COUNTER == 2'd6) begin // write reg
+                    PC_w = 1'b0;
                     MEM_w = 1'b0;   
-                    IR_w = 1'b0;    
-                    RB_w = 1'b0;    
-                    AB_w = 1'b0;    // AB?
-                    ULA_c = 3'b000; // ULAcontrol? se sim pode ser passado aqui o OPCODE
-                    M_WREG = 1'b0;  
-                    M_ULAA = 1'b1;  
-                    M_ULAB = 2'b00; 
+                    IR_w = 1'b0;
+                    AB_w = 1'b0;
+                    ULA_c = 3'b000;
+                    M_ULAA = 1'b0;
+                    M_ULAB = 2'b00;
+                    
+                    //  -- DIRECIONAR RESULTADO DA ULA PRA [rt]
+                    RB_w = 1'b1;
+                    M_WREG = 3'd1;
+                    //  --  --  --
+
                     reset_out = 1'b0; 
                     COUNTER = COUNTER + 1;
                 end else
-                if(COUNTER == 2'd3) begin //Write reg
-                    PC_w = 1'b0;    
+                begin   // VOLTAR PARA O ESTADO DE BUSCA E DECODIFICACAO
+                    PC_w = 1'b0;
                     MEM_w = 1'b0;   
-                    IR_w = 1'b0;    
-                    RB_w = 1'b1;    // libera pra escria
-                    AB_w = 1'b0;    // AB?
-                    ULA_c = 3'b001; // manda saida da ULA pro bancoReg
-                    M_WREG = 1'b1;  // escolhe o reg pra escrita [rd]
-                    M_ULAA = 1'b1;  
-                    M_ULAB = 2'b00; 
-                    reset_out = 1'b0;
-                    COUNTER = COUNTER + 1;
+                    IR_w = 1'b0;
+                    AB_w = 1'b0;
+                    ULA_c = 3'b000;
+                    M_ULAA = 1'b0;
+                    M_ULAB = 2'b00;
+                    RB_w = 1'b0;
+                    M_WREG = 3'd0;
+
+                    COUNTER = 0;
+                    reset_out = 1'b0; 
+                    STATE = ST_COMMON;
                 end
             end
 
-
-            ST_RESET:
-            begin
-                // opcode de reset
-                STATE = ST_RESET; // estado é o comum
+            ST_RESET: begin // FALTA RESETAR A pilha
+                STATE = ST_COMMON; // estado é o comum
                 PC_w = 1'b0;
                 MEM_w = 1'b0; 
                 IR_w = 1'b0; 

@@ -127,6 +127,7 @@ module cpu_add(
 
     //Seguindo o fluxo, antes de instanciar o BReg temos que instanciar o mux 3, o writereg 
 
+    /*
     mux_writereg M_REG_(
         M_WREG,
         RT, // primeira entrada
@@ -135,6 +136,7 @@ module cpu_add(
 
         // Instancia tudo que não tá instanciado como variavel 
     );
+    */
 
     // Agora, vamos instanciar o banco de registradores 
 
@@ -186,7 +188,7 @@ module cpu_add(
         ULAA_in
     );
 
-    mux_ulaB M_ULA_B_ (
+    mux_ulaA M_ULA_B_ (
         M_ULAB,
         B_out,
         SXTND_out,
