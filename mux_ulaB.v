@@ -1,17 +1,5 @@
-<<<<<<< HEAD
 module mux_ulaB(
-    input wire [31:0] Data_0, // 1 entrada
-    input wire [27:0] Data_1, // 2 entrada 
-
-    output wire [31:0] Data_out // saida 
-);
-
-    assign Data_out = {Data_0[31:28], Data_1};
-
-=======
-module mux_ulaB(
-
-    input wire [1:0] selector, // pra selecionar
+    input wire [2:0] selector, // pra selecionar
     input wire [31:0] Data_0, // 1 entrada
     input wire [31:0] Data_1, // 2 entrada 
 
@@ -32,6 +20,5 @@ Data1 --------| -
     // em decimal 32'd4
     assign A1 = (selector[0]) ? 32'd4 : Data_0;
     // vai selecionar o bit mais a esquerda 
-    assign Data_out = (selector[1]) ? Data_1 : A1; 
->>>>>>> f5c760b8f7aa2e7e7d608408ebd4e02d28ba8bb9
+    assign Data_out = (selector[1]) ? Data_1 : A1;
 endmodule

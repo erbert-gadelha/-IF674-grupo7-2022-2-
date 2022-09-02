@@ -108,7 +108,14 @@ always @(posedge clk) begin
                     ULA_c = 3'b000;
                     
                     if(OPCODE == 6'd0)
+                    begin
                         M_ULAB = 2'd00;
+
+                        //case ()
+                        //    2'h2:
+                        //endcase
+                        
+                    end
                     else
                         M_ULAB = 2'd02;
                     
@@ -150,6 +157,8 @@ always @(posedge clk) begin
                     STATE = ST_COMMON;
                 end
             end
+
+
 
             ST_RESET: begin // FALTA RESETAR A pilha
                 STATE = ST_COMMON; // estado é o comum
