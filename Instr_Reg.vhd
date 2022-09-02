@@ -37,7 +37,6 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 
-
 -- Short name: ir
 ENTITY Instr_Reg IS
 	PORT( 
