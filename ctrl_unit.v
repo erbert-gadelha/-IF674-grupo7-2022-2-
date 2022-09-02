@@ -11,22 +11,57 @@ module ctrl_unit(
         // fim   
     // parte importante da instrucao
     input wire  [5:0]    OPCODE, // opcode
+    // instrução
+    input wire [5:0] funct,
+
         // sinais de controle pra todos os muxs e todas as unidades do controle
     // Controladores com 1 bit
     // Registradores de variaveis 
     output reg    PC_w, 
     output reg    MEM_w,
     output reg    IR_w,
-    output reg    RB_w,
+    output reg    Reg_w,
     output reg    AB_w,
 
+   
     // Controladores com mais de 1 bit
     output reg [2:0]    ULA_c,
 
+    
     // Controlador pra os multiplexadores  
     output reg    M_WREG,
     output reg    M_ULAA,
     output reg  [1:0]    M_ULAB,
+
+    output reg aluOut_w, // 
+
+    output reg MemRead, 
+    //output reg mdr_w, // 
+    //output reg epc_w, // 
+
+    output reg ALUSrcA, // controle do multiplexador de A da ULA
+    
+    // Sinais de controle com 2 bits 
+    // 00 , 01, 10, 11
+    output reg [1:0] ALUSrcB, // controle do multiplexador de B da ULA 
+    output reg [1:0] ALU_flag,
+    
+    output reg [1:0] RegDst,
+
+
+
+    // Sinais de controle 3 bits
+    output reg [2:0] PC_source, // controle do multiplexador do ALUOut 
+    output reg [2:0] ALU_op,    
+    output reg [2:0] i_or_d,
+
+    output reg [7:0] MemtoReg,
+
+    // FIM DOS CONTROLADORES DA ULA 
+
+    // FALTAM
+    // memRead, PCWriteCond
+
 
     // controle de reset de saida
     // Controles especiais pra instrucao de reset
@@ -55,14 +90,23 @@ parameter ADD = 6'b000000;
 parameter ADDI = 6'b001000;
 parameter RESET = 6'b111111;
 
+parameter R = 6'h0; // opcode r 
+
+
+// Funct
+parameter add_funct = 6'h20;
+
 
 
 // O initial dá um reset em toda UC
 // Aqui vc coloca tb o valor 227 no registrador 29
 initial begin
     // dá o reset inicial na maquina , coloca no estado de reset 
-    // o reset_out é o mesmo fio do reset_in 
+    // o reset_out é o mesmo fio do reset_in
     reset_out = 1'b1;
+    RegDst = 2'b11;
+    Reg_w = 1'b0;
+
 end
 
 
@@ -86,12 +130,24 @@ always @(posedge clk) begin
             PC_w = 1'b0;
             MEM_w = 1'b0;
             IR_w = 1'b0;
-            RB_w = 1'b0;
+            Reg_w = 1'b0;
             AB_w = 1'b0;
             ULA_c = 3'b000;
             M_WREG = 1'b0;
             M_ULAA = 1'b0;
             M_ULAB = 2'b00;
+
+            PC_source = 1'b0;
+            // data_source = 3'b001;
+            MemRead = 1'b0;
+            i_or_d = 3'b000;
+            aluOut_w = 1'b0;
+            ALUSrcA = 1'b0;
+            ALUSrcB = 2'b00;
+            ALU_op = 2'b00;
+            RegDst = 2'b00; //
+            MemtoReg = 7'b0000000;
+
 
 
             // eu garanto que o reset vai continuar sendo apertado pra terminar o processo
@@ -104,25 +160,37 @@ always @(posedge clk) begin
 
         else begin
             // Nesse estado como é o próximo clock eu posso supor que todas as unidades que precisam do reset pra funiconar foram resetadas. Dai eu jogo o estado pra o estado comun, que é o qual eu busco a instrucao e gravo em R e dou load em A e B e seto reset_out pra 0 
-                STATE = ST_COMMON; // eu coloco o estado atual no estado de reset
-                
-                // zero todos os sinais de saida pq nada pode ser escrito no Breg ou na Memoria
-                // zero tudo. Tudo fica pra modo de escrita
-                PC_w = 1'b0;
-                MEM_w = 1'b0;
-                IR_w = 1'b0;
-                RB_w = 1'b0;
-                AB_w = 1'b0;
-                ULA_c = 3'b000;
-                M_WREG = 1'b0;
-                M_ULAA = 1'b0;
-                M_ULAB = 2'b00;
-            
-                
-                // a saida de reset é colocada pra 0
-                reset_out = 1'b0; // MEXEU AQUI
-    
-                COUNTER = 3'b000; // seta o contador pra proxima operacao
+            // zero todos os sinais de saida pq nada pode ser escrito no Breg ou na Memoria
+            // zero tudo. Tudo fica pra modo de escrita
+            PC_w = 1'b0;
+            MEM_w = 1'b0;
+            IR_w = 1'b0;
+            Reg_w = 1'b0;
+            AB_w = 1'b0;
+            ULA_c = 3'b000;
+            M_WREG = 1'b0;
+            M_ULAA = 1'b0;
+            M_ULAB = 2'b00;
+
+            PC_source = 1'b0;
+            // data_source = 3'b001;
+            MemRead = 1'b0;
+            i_or_d = 3'b000;
+            aluOut_w = 1'b0;
+            ALUSrcA = 1'b0;
+            ALUSrcB = 2'b00;
+            ALU_op = 2'b00;
+            RegDst = 2'b00; //
+
+            MemtoReg = 7'b0000000;
+
+
+
+            // eu garanto que o reset vai continuar sendo apertado pra terminar o processo
+            // a saida de reset é colocada pra 1
+            reset_out = 1'b0;
+
+            COUNTER = 3'b000; // seta o contador pra proxima operacao - coloca ele pra 0  
             
         end
     end
@@ -136,13 +204,13 @@ always @(posedge clk) begin
             ST_COMMON: begin
                 // Os 3 primeiros ciclos de clock que eu preciso repetir.  
                 // o contador começa no 0
-                if(COUNTER == 3'b000 || COUNTER == 3'b001 || COUNTER == 3'b010) begin
+                if(COUNTER == 3'b000 || COUNTER == 3'b001 || COUNTER == 3'b010 ) begin
                     // Aqui eu somo PC + 4 e espero a memoria sair enquanto eu n tenho certeza que tá saindo da memoria eu continuo fazendo a soma, mas n salvo em pc e nem em ir 
                     STATE = ST_COMMON; 
                     PC_w = 1'b0;
                     MEM_w = 1'b0; // ve se a memoria tá sendo escrita ou lida 
                     IR_w = 1'b0;
-                    RB_w = 1'b0;
+                    Reg_w = 1'b0;
                     AB_w = 1'b0;
                     // Ver o controle da ULA que nesse caso fica sendo 001
                     ULA_c = 3'b001; // somo PC + 4 
@@ -151,6 +219,21 @@ always @(posedge clk) begin
                     M_ULAA = 1'b0;
                     M_ULAB = 2'b01; // MUDOU PRA 1  
                     reset_out = 1'b0; 
+
+                    // DECODIFICACAO? 
+
+                    PC_source = 1'b0;
+                    // data_source = 3'b001;
+                    MemRead = 1'b1; // MEXEU AQUI 
+                    i_or_d = 3'b000;
+                    aluOut_w = 1'b0;
+                    ALUSrcA = 1'b0;
+                    ALUSrcB = 2'b11; // mexeu aqui 
+                    ALU_op = 2'b00;
+                    RegDst = 2'b00; //
+                    
+                    MemtoReg = 7'b0000000;
+                    
                     COUNTER = COUNTER + 1; // seta o contador pra proxima operacao
                 end
                 // No 4° clock eu faço um else if pra o contador == 3 pra entrar no 4° clck
@@ -163,13 +246,27 @@ always @(posedge clk) begin
                     
                     IR_w = 1'b1; // Mando salvar em IR
                     
-                    RB_w = 1'b0;
+                    Reg_w = 1'b0;
                     AB_w = 1'b0;
                     ULA_c = 3'b001; // mexo na ula
                     M_WREG = 1'b0;
                     M_ULAA = 1'b0;
                     M_ULAB = 2'b01; 
                     reset_out = 1'b0; 
+
+                    PC_source = 1'b0;
+                    // data_source = 3'b001;
+                    MemRead = 1'b0;
+                    i_or_d = 3'b000;
+                    aluOut_w = 1'b0;
+                    ALUSrcA = 1'b0;
+                    ALUSrcB = 2'b01;
+                    ALU_op = 2'b00;
+                    RegDst = 2'b00; //
+                    
+                    MemtoReg = 7'b0000000;
+
+
                     COUNTER = COUNTER + 1; // seta o contador pra proxima operacao
                 end
                 // Agora, a fase do 5° e 6° clock
@@ -196,7 +293,7 @@ always @(posedge clk) begin
                     // Considero que o IR já foi escrito, então volta pra 0
                     IR_w = 1'b0; 
                     
-                    RB_w = 1'b0;
+                    Reg_w = 1'b0;
                     AB_w = 1'b1; // estou escrevendo 
                
                     // Como eu n mexo com a ULA neste ciclo pq eu vou carregar A e B, ela vai pra 0  
@@ -206,6 +303,21 @@ always @(posedge clk) begin
                     M_ULAA = 1'b0; // vai pra 0
                     M_ULAB = 2'b00; // vai pra 0
                     reset_out = 1'b0; 
+
+                    
+                    PC_source = 1'b0;
+                    // data_source = 3'b001;
+                    MemRead = 1'b0;
+                    i_or_d = 3'b000;
+                    aluOut_w = 1'b0;
+                    ALUSrcA = 1'b0;
+                    ALUSrcB = 2'b00; // 
+                    ALU_op = 2'b00;
+                    RegDst = 2'b00; //
+
+                    MemtoReg = 7'b0000000;
+
+
                     COUNTER = COUNTER + 1; // seta o contador pra proxima operacao
                     
                 end
@@ -217,23 +329,24 @@ always @(posedge clk) begin
                 else if(COUNTER == 3'b101) begin
                     // Primeiro define o proximo estado através do OPCODE
                     case (OPCODE)
-                        ADD: begin
-                            STATE = ST_ADD;
+                        R: begin
+                            ALUSrcA = 1'b0;
+                            ALUSrcB = 2'b00; // 
+                            ALU_op = 2'b00;
+                            
+                            case(funct)
+                                add_funct: begin
+                                    STATE = ST_ADD;
+                                end
+                            endcase
                         end
-                        ADDI: begin
-                            STATE = ST_ADDI;
-                        end
-                        RESET: begin
-                            STATE = ST_ADD;
-                        end
-
                         // O DEFAULT É PRA QUANDO N ACHA NENHUMA AI GERA EXECECAO
                     endcase
 
                     PC_w = 1'b0;
                     MEM_w = 1'b0; 
                     IR_w = 1'b0; 
-                    RB_w = 1'b0;
+                    Reg_w = 1'b0;
                     AB_w = 1'b0; // estou escrevendo 
                     ULA_c = 3'b000;
                     M_WREG = 1'b0;
@@ -241,6 +354,18 @@ always @(posedge clk) begin
                     M_ULAB = 2'b00; // vai pra 0
                     reset_out = 1'b0; 
                     COUNTER = 3'b000; 
+
+                    PC_source = 1'b0;
+                    // data_source = 3'b001;
+                    MemRead = 1'b0;
+                    i_or_d = 3'b000;
+                    aluOut_w = 1'b0;
+                    ALUSrcA = 1'b0;
+                    ALUSrcB = 2'b00; // 
+                    ALU_op = 2'b00;
+                    RegDst = 2'b00; //
+
+                    MemtoReg = 7'b0000000;
                     
                 end
             end
@@ -258,7 +383,7 @@ always @(posedge clk) begin
                     MEM_w = 1'b0; 
                     IR_w = 1'b0; 
                     // Vou escrever no Banco de Registradores pq minha ULA é instantanea, daí quando eu mando somar e a unica entrada do Breg pra ecrita é a ULA, então eu posso mandar escrever no Breg  
-                    RB_w = 1'b1;
+                    Reg_w = 1'b1;
                     AB_w = 1'b0; 
                     // Eu mando escrever ao mesmo tempo que eu coloco a ULA pra fazer soma   
                     ULA_c = 3'b001;
@@ -268,8 +393,22 @@ always @(posedge clk) begin
                     M_ULAA = 1'b1;
                     M_ULAB = 2'b00; 
                     reset_out = 1'b0; 
-                    COUNTER = COUNTER + 1; // adiciono 1 no contador
                     
+                    MemtoReg = 7'b0000000;
+
+                    PC_source = 1'b0;
+                    // data_source = 3'b001;
+                    MemRead = 1'b0;
+                    i_or_d = 3'b000;
+                    aluOut_w = 1'b0;
+                    ALUSrcA = 1'b0;
+                    ALUSrcB = 2'b00; // 
+                    ALU_op = 2'b00;
+                    RegDst = 2'b01; //
+
+
+                    COUNTER = COUNTER + 1; // adiciono 1 no contador
+
                 end
                  // Ai eu passo pra o 2 estado considerando que a soma já foi feita e meu Breg tá no ultimo ciclo pra salvar 
                     // Eu seto ele pra o estado comum e depois eu seleciono o contaaddor pra 0 pq no primerio estado do estado comum ele zera quase tudo e faz a soma do PC + 4
@@ -282,8 +421,8 @@ always @(posedge clk) begin
                     STATE = ST_COMMON; // estado é o comum
                     PC_w = 1'b0;
                     MEM_w = 1'b0; 
-                    IR_w = 1'b0; 
-                    RB_w = 1'b1;
+                    IR_w = 1'b0;    
+                    Reg_w = 1'b1;
                     AB_w = 1'b0; // estou escrevendo 
                     ULA_c = 3'b001;
                     M_WREG = 1'b1;
@@ -291,6 +430,17 @@ always @(posedge clk) begin
                     M_ULAB = 2'b00; // vai pra 0
                     reset_out = 1'b0; 
                     COUNTER = 3'b000; 
+
+                    PC_source = 1'b0;
+                    // data_source = 3'b001;
+                    MemRead = 1'b0;
+                    i_or_d = 3'b000;
+                    aluOut_w = 1'b0;
+                    ALUSrcA = 1'b0;
+                    ALUSrcB = 2'b00; // 
+                    ALU_op = 2'b00;
+                    RegDst = 2'b01; //
+
                 end
             end
             
@@ -306,7 +456,7 @@ always @(posedge clk) begin
                     MEM_w = 1'b0; 
                     IR_w = 1'b0; 
                     // Vou escrever no Banco de Registradores pq minha ULA é instantanea, daí quando eu mando somar e a unica entrada do Breg pra ecrita é a ULA, então eu posso mandar escrever no Breg  
-                    RB_w = 1'b1;
+                    Reg_w = 1'b1;
                     AB_w = 1'b0; 
                     // Eu mando escrever ao mesmo tempo que eu coloco a ULA pra fazer soma   
                     ULA_c = 3'b001;
@@ -331,7 +481,7 @@ always @(posedge clk) begin
                     PC_w = 1'b0;
                     MEM_w = 1'b0; 
                     IR_w = 1'b0; 
-                    RB_w = 1'b1;
+                    Reg_w = 1'b1;
                     AB_w = 1'b0; // estou escrevendo 
                     ULA_c = 3'b001;
                     M_WREG = 1'b0; // vai pra 0
@@ -348,7 +498,7 @@ always @(posedge clk) begin
                 PC_w = 1'b0;
                 MEM_w = 1'b0; 
                 IR_w = 1'b0; 
-                RB_w = 1'b0;
+                Reg_w = 1'b0;
                 AB_w = 1'b0; // estou escrevendo 
                 ULA_c = 3'b000;
                 M_WREG = 1'b0; // vai pra 0
@@ -361,4 +511,6 @@ always @(posedge clk) begin
         endcase 
     end
 end
+
+
 endmodule

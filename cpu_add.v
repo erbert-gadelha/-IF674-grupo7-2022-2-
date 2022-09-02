@@ -2,6 +2,8 @@ module cpu_add(
     input wire clk,
     input wire reset
 
+
+
 );
 
 
@@ -14,6 +16,7 @@ module cpu_add(
 // PARTES DA ULA 
 
 // FLAGS 
+
     wire    Of;
     wire    Ng;
     wire    Zr;
@@ -23,10 +26,15 @@ module cpu_add(
 
 
 // Controles de 1 bit
+
     wire PC_w;
     wire MEM_w;
     wire IR_w;
-    wire RB_w; // Novas fios para instancias do Banco de Registadores
+
+    // reg write 
+    wire Reg_w; // Novas fios para instancias do Banco de Registadores
+    
+    // controlador da ULA
     wire AB_r;
 
 
@@ -48,6 +56,7 @@ module cpu_add(
     wire [15:0]    OFFSET; // o imediato 
 
 // Fio de dados com menos de 32 bits 
+    // Write Reg 
     wire [4:0] WRITEREG_in; // variavel do mux 3 
 
 
@@ -60,7 +69,8 @@ module cpu_add(
     // DECLARAR OS SINAIS DE CONTROLE
     // Control wires 
 
-    wire AB_w; // contrle de escrita de A e B 
+   
+    wire AB_w; // contrle de escrita de A e B ao mesmo tempo
     
 
 
@@ -83,8 +93,28 @@ module cpu_add(
     wire [31:0] ULAA_in;
     wire [31:0] ULAB_in;
     
-  
     
+    // novas
+    wire aluOut_w;
+    wire MemRead;
+    
+    wire ALUSrcA; // controle do multiplexador de A da ULA
+    
+    // Sinais de controle com 2 bits 
+    // 00 , 01, 10, 11
+    wire [1:0] ALUSrcB; // controle do multiplexador de B da ULA 
+    wire [1:0] ALU_flag;
+    
+    wire [1:0] RegDst;
+
+    // instrução
+    wire [5:0] funct;
+
+    wire [2:0] ALU_op;
+    wire [2:0] i_or_d;
+
+    wire [7:0] MemtoReg;
+
 
 
 
@@ -141,7 +171,7 @@ module cpu_add(
     Banco_reg REG_BASE_(
         clk,
         reset,
-        RB_w,// Reg Write - sinal de controle 
+        Reg_w,// Reg Write - sinal de controle 
         RS,// read reg 1 - rs 
         RT,// read reg 2 - rt     
         WRITEREG_in,// WriteReg
@@ -219,20 +249,31 @@ module cpu_add(
         Lt, // menor
         // fim   
         OPCODE, // opcode
+        funct,
         // sinais de controle pra todos os muxs e todas as unidades do controle
         PC_w, 
         MEM_w,
         IR_w,
-        RB_w,
+        Reg_w,
         AB_w,
         ULA_c,
         M_WREG,
         M_ULAA,
         M_ULAB,
-
+        aluOut_w,
+        MemRead,
+        ALUSrcA,
+        ALUSrcB,
+        ALU_flag,
+        RegDst,
+        PC_source,
+        ALU_op,
+        i_or_d,
+        MemtoReg,
         // reset de saida
         reset
     );
 
     // Agora, instnaciar a Unidade de Controle, dai eu seleciono todos os fiso que vou usar nela 
+
 endmodule
