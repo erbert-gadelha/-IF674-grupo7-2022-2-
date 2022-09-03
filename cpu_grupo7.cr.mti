@@ -5,13 +5,6 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	cpu_add
 
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module cpu
-
-Top level modules:
-	cpu
-
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaA.vhd {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_ulaA.vhd
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module mux_ulaA
@@ -33,6 +26,13 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package std_logic_1164
 -- Compiling entity Instr_Reg
 -- Compiling architecture behavioral_arch of Instr_Reg
+
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula_control.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula_control.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module ula_control
+
+Top level modules:
+	ula_control
 
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula32.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ula32.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
@@ -68,7 +68,7 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Compiling entity RegDesloc
 -- Compiling architecture behavioral_arch of RegDesloc
 
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_4.v {1 {vlog -work work -stats=none {C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\mux_4.v}
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_4.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_4.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module mux_4
 
@@ -97,19 +97,12 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v {2 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module unidade_controle
-** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(112): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
-** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(120): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(114): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(123): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(129): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
 
 Top level modules:
 	unidade_controle
-
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v {2 {vlog -work work -stats=none {C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\sign_xtend_16.v}
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module sign_extend_16
-** Warning: C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\sign_xtend_16.v(8): (vlog-2121) Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
-
-Top level modules:
-	sign_extend_16
 
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_8.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_8.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
@@ -118,12 +111,20 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	mux_8
 
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/left_shift2.v {1 {vlog -work work -stats=none {C:\Users\Erbert\OneDrive\Documentos\GitHub\CPU_Grupo7\left_shift2.v}
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v {2 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module left_shift2
+-- Compiling module sign_extend_16
+** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/sign_xtend_16.v(8): (vlog-2121) Illegal concatenation of an unsized constant. Will treat it as a 32-bit value.
 
 Top level modules:
-	left_shift2
+	sign_extend_16
+
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module mux_writereg
+
+Top level modules:
+	mux_writereg
 
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Registrador.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/Registrador.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
@@ -133,12 +134,12 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Compiling entity Registrador
 -- Compiling architecture behavioral_arch of Registrador
 
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/mux_writereg.v
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/left_shift2.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/left_shift2.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module mux_writereg
+-- Compiling module left_shift2
 
 Top level modules:
-	mux_writereg
+	left_shift2
 
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/ctrl_unit.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
