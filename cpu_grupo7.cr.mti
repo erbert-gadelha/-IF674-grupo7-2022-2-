@@ -1,4 +1,11 @@
-C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v
+C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module cpu
+
+Top level modules:
+	cpu
+
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/cpu_add.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module cpu_add
 
@@ -94,12 +101,9 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Compiling entity Memoria
 -- Compiling architecture behavioral_arch of Memoria
 
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v {2 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v
+} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module unidade_controle
-** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(114): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
-** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(123): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
-** Warning: C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/unidade_controle.v(129): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
 
 Top level modules:
 	unidade_controle

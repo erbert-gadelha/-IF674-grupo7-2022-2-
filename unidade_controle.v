@@ -11,7 +11,6 @@ module unidade_controle(
     //
     // OUTPUTS
         output reg [4:0] can_write, // CAN_WRITE: 0-pc, 1-memoria, 2-instrucao, 3-registradores, 4- regs_AB
-        output reg [2:0] ULA_c,     // ULA_C: operacao da ULA
 
         // MUTIPLEXADORES
             output reg [1:0]PC_source,
@@ -20,9 +19,10 @@ module unidade_controle(
             output reg [1:0] M_ULAB,
     //
     // RESETA MODULOS
-            output reg reset_out
+            output wire reset_out
     //
 );
+
 
 
 // DECLARACOES
@@ -45,31 +45,26 @@ module unidade_controle(
 
 initial begin
     // Tambem deve resetar pilha
-    reset_out = 1'b1;
+    Adress_source = 3'd0;
     PC_source = 1'b0;
     can_write = 5'd0;
     COUNTER = 3'd0;
     M_ULAB = 2'd0;
     M_ULAA = 1'b0;
-    ULA_c = 3'd0;
+    STATE = ST_RESET;
 end
+
+assign reset_out = ((STATE != ST_RESET) & (reset == 1'b1));
 
 always @(posedge clk) begin
 
-    if ((reset == 1'b1) || (OPCODE == reset)) begin //  BOTAO RESET PRESSIONADO
+    if ((reset == 1'b1) || (STATE == ST_RESET)) begin //  BOTAO RESET PRESSIONADO
         // DA 1 PULSO DE RESET PARA OS OUTROS MODULOS
-            if (STATE != ST_RESET) begin
-                STATE = ST_RESET;
-                reset_out = 1'b1;
-            end
-            else begin
-                STATE = ST_BUSCA;
-                reset_out = 1'b0;
-            end
+            STATE = {(reset == 1'b1)?ST_RESET:ST_BUSCA};
+        //
         // SAIDAS SAO MANTIDAS ZERADAS
         PC_source = 1'b0;
-        can_write = 3'd0;
-        ULA_c = 3'b000;
+        can_write = 5'd0;
         M_ULAA = 1'b0;
         M_ULAB = 2'b00;
         COUNTER = 3'd0;
@@ -79,61 +74,87 @@ always @(posedge clk) begin
 
         case (STATE)
             ST_BUSCA:
+            begin
                 if(COUNTER < 3) begin   // BUSCA
                     Adress_source = 0;      // LE PC
                     can_write = 5'b00100;   // LIBERA instr PARA ESCRITA
 
                     // ZERA OUTRAS SAIDAS
+                        PC_source = 1'b0;
+                        M_ULAB = 2'd0;
+                        M_ULAA = 1'b0;
+                    //
 
                     COUNTER =  COUNTER + 1;
                 end else begin
                     case(OPCODE)
-                        ST_RESET:   STATE = ST_RESET;
-                        ST_ULA:     STATE = ST_ULA;
+                        RESET:   begin STATE = ST_RESET;end
+                        ADD:     begin STATE = ST_ULA;end
+                        ADDI:     begin STATE = ST_ULA;end
+                        // DEFAULT
+                        //STATE = ST_RESET;
                     endcase
-                end
 
+                    COUNTER = 3'd0;
+                end
+            end
             ST_ULA:
-                if(COUNTER < 2) begin       // SELECIONA A E B
+            begin
+                if(COUNTER < 5)begin   // A + B
                     M_ULAA = 1;
                     if(OPCODE==6'd0)    // TIPO R
                         M_ULAB = 2'd0;
                     else                // TIPO I
                         M_ULAB = 2'd2;
+                end else begin          // PC + 4
+                    M_ULAA = 1;
+                    M_ULAB = 2'd1;
+                end
+
+                if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2) begin       // SELECIONA A E B
 
 
+                    // ZERA OUTRAS SAIDAS
+                        PC_source = 1'b0;
+                        can_write = 5'd0;
+                    //
 
                     COUNTER = COUNTER + 1;
                 end else if(COUNTER == 3) begin // DIRECIONA RESULTADO
                     Adress_source = 3'd1;
 
                     // ZERA OUTRAS SAIDAS
+                        PC_source = 1'b0;
+                        can_write = 5'd0;
+                    //
 
                     COUNTER = COUNTER + 1;
-                end else if(COUNTER == 3) begin // ESCREVE RESULTADO
-                    can_write = 5'd01000;
+                end else if(COUNTER == 4) begin // ESCREVE RESULTADO
+                    can_write = 5'b01000;
+                    Adress_source = 3'd1;
 
                     // ZERA OUTRAS SAIDAS
 
                     COUNTER = COUNTER + 1;
-                end else if(COUNTER < 5) begin
-                    M_ULAA = 1;
-                    M_ULAB = 2'd1;
+                end else if(COUNTER == 5 || COUNTER == 6) begin // PC + 4
+                    //M_ULAA = 1;
+                    //M_ULAB = 2'd1;
                     PC_source = 0;
-                    can_write = 5'd10000;
+                    can_write = 5'b10000;
 
                     // ZERA OUTRAS SAIDAS
 
                     COUNTER = COUNTER + 1;
                 end else begin
-                    can_write = 5'd00000;
-                    M_ULAA = 1;
-                    M_ULAB = 2'd1;
+                    can_write = 5'd0;
+                    //M_ULAA = 1;
+                    //M_ULAB = 2'd1;
                     PC_source = 0;
 
+                    STATE = ST_BUSCA;
+                    COUNTER = 3'd0;
                 end
-
-
+            end
 
         endcase
 
