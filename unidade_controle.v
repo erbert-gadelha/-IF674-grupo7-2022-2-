@@ -10,13 +10,24 @@ module unidade_controle(
         input wire [5:0] OPCODE,
     //
     // OUTPUTS
-        output reg [5:0] can_write, // CAN_WRITE: 0-pc, 1-memoria, 2-instrucao, 3-registradores, 4- regs_AB
+        // CAN_WRITE ...
+            output reg [6:0] can_write, 
+            // 6-Append_out
+            //  5-ALU_out
+            //   4-Regs_AB
+            //    3-Registradores
+            //     2-Instrucao
+            //      1-Memoria
+            //       0-PC
+
 
         // MUTIPLEXADORES
-            output reg [1:0]PC_source,
+            output reg [1:0] PC_source,
             output reg [2:0] Adress_source,
-            output reg M_ULAA,
+            output reg       M_ULAA,
             output reg [1:0] M_ULAB,
+            output reg [1:0] M_REG_adress;
+            output reg [2:0] M_REG_data;
     //
     // RESETA MODULOS
             output wire reset_out
@@ -25,20 +36,38 @@ module unidade_controle(
 
 
 // DECLARACOES
-    // Variaveis 
+    // VARIAVEIS 
         reg [2:0] COUNTER;
         reg [3:0] STATE;
     // 
     // Estados principais da maquina 
         parameter ST_BUSCA  = 5'd0;
         parameter ST_ULA    = 5'd1;
-        parameter ST_JUMP   = 5'2d;
+       // parameter ST_JUMP   = 5'2d;
         parameter ST_RESET  = 5'd3;
-        parameter ST_BACK   = 5'd4;
+        //parameter ST_BACK   = 5'd4;
     //
-    // Opcode
-        parameter ADD = 6'b000000;
-        parameter ADDI = 6'b001000;
+    // OPCODES
+        parameter R     = 6'h0;
+        parameter ADDI  = 6'h8;
+        parameter ADDIU = 6'h9;
+        parameter BEQ   = 6'h4;
+        parameter BNE   = 6'h5;
+        parameter BLE   = 6'h6;
+        parameter BGT   = 6'h7;
+
+        //[LOADS/STORES]
+            // parameter LB = 6'h20;
+            // parameter LH = 6'h21;
+            // parameter LUI = 6'hf;
+            // parameter LW = 6'h23;
+            // parameter SB = 6'h28;
+            // parameter SH = 6'h29;
+            // parameter SLTI = 6'ha;
+            // parameter SW = 6'h2b;
+
+        parameter J     = 6'h2;
+        parameter JAL   = 6'h3;
         parameter RESET = 6'b111111;
     //
 //
@@ -79,7 +108,7 @@ always @(posedge clk) begin
             begin
                 COUNTER = COUNTER + 1;
                 Adress_source = 0;      // LE PC
-                can_write = 6'b00100;   // LIBERA instr PARA ESCRITA
+                can_write = 6'b000100;   // LIBERA instr PARA ESCRITA
 
                 // ZERA OUTRAS SAIDAS
                     PC_source = 1'b0;
@@ -91,8 +120,7 @@ always @(posedge clk) begin
                 COUNTER = 3'd0;
                 case(OPCODE)
                         RESET:  STATE = ST_RESET;
-                        ADDI:   STATE = ST_ULA;
-                        ADD:    STATE = ST_ULA;
+                        R:
                         default:STATE = ST_ULA;
                 endcase                    
             end
@@ -100,7 +128,6 @@ always @(posedge clk) begin
         
         if (STATE == ST_ULA)    // #1
         begin
-
                 if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2) // SELECIONA A E B
                 begin       
                     COUNTER = COUNTER + 1;
@@ -167,18 +194,11 @@ always @(posedge clk) begin
                     STATE = ST_BUSCA;
                 end
         end else
-
-        if(STATE == ST_JUMP)    // #2
-        begin
-            if(COUNTER == 0 || COUNTER == 1) begin
-
-                COUNTER = COUNTER + 1;
+        if(STATE == ST_JR) begin
+            if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2)
+            begin
+                
             end
-        end else
-
-        IF(STATE == ST_BACK)    // #4
-        begin
-            if(COUNTER == 0)
         end
 
 

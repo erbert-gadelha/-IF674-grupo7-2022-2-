@@ -1,5 +1,5 @@
 module left_shift2 (
-    input wire [31:0] data_in,
+    input wire [15:0] data_in,
     output wire [31:0] data_out
     );
 

@@ -73,9 +73,9 @@ module cpu( input wire clock,
     //
 
     // MUX-MEMsrc
-    //wire [32:0] mem_in;
+    //  wire [32:0] mem_in;
     //  MUX-MEMsrc [<1>seletor, <32>data_in1, <32>data_in2, <32>data_out]
-    //mux2 mux_mem_ (mem_adress_src, pc, ul, A);
+    //  mux2 mux_mem_ (mem_adress_src, pc, ul, A);
     //
 
     // MUX-ULAA 
@@ -87,6 +87,31 @@ module cpu( input wire clock,
         //  MUX_4 [<2>seletor, <32>data0, <32>data1, <32>data2, <32>data3, <32>data_out]
         mux_4 mux_b_ (sel_ula_B, reg_data_out2, const_4, extd_out, shift_out, B);
     //
+
+
+    // MUX_REG_DATA
+        //0- mem
+        //1- ulaOut
+        //2- HI
+        //3- LO
+        //4- shft
+        //5- const (227)
+        //6-
+
+        //7-
+        reg [31:0] HI;
+        reg [31:0] LO;
+        reg [31:0] shift;
+        reg [31:0] sp_reset = 32'd227;
+    //
+    //  MUX_8 [<3>seletor, <32>data0, <32>data1, <32>data2, <32>data3, <32>data4, <32>data5, <32>data6, <32>data7]
+        mux_8 mux_reg_data_ (sel_reg_data_, mem_data_out, ula_out, HI, LO, shift, (), (), extd_out, shift_out, B);
+    //
+
+
+        mux_4 mux_reg_address_ (adr);
+
+
     /*  MUX-PCsource [<1>seletor, <32>data_in1, <32>data_in2, <32>data_out]
         wire[31:0] ula_out;
         reg [31:0] append_out = 32'd0;

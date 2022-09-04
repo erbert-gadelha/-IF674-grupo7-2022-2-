@@ -126,13 +126,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Compiling entity Registrador
 -- Compiling architecture behavioral_arch of Registrador
 
-} {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/left_shift2.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/left_shift2.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module left_shift2
-
-Top level modules:
-	left_shift2
-
 } {} {}} C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/reg32.v {1 {vlog -work work -stats=none C:/Users/Erbert/OneDrive/Documentos/GitHub/CPU_Grupo7/reg32.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module reg32
