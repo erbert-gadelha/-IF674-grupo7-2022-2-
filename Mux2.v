@@ -7,5 +7,5 @@ module mux2
 );
 
 
-assign O = {sel?A:B};
+assign O = {sel?B:A};
 endmodule

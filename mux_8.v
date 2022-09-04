@@ -1,6 +1,7 @@
 module mux_8
 (
     input wire [2:0]seletor,
+    
     input wire [31:0] a0,
     input wire [31:0] a1,
     input wire [31:0] a2,

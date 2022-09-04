@@ -1,6 +1,6 @@
 
 // CONTROLE  IN  -[<1>clock, <1>reset, <6>flags, <6>opcode]
-// CONTROLE  OUT -[<5>writes, <1>PC_source, <1>Mem_Adress_Source, <1>mux_ULAa, <1>mux_ULAb, <1>reset]
+// CONTROLE  OUT -[<5>writes, <1>PC_source, <1>mux_mem_adrss, <1>mux_ULAa, <2>mux_ULAb, <2>mux_reg_adrrs, <3>mux_reg_data, <1>reset]
 
 module unidade_controle(
     // INPUTS
@@ -20,14 +20,13 @@ module unidade_controle(
             //      1-Memoria
             //       0-PC
 
-
         // MUTIPLEXADORES
             output reg [1:0] PC_source,
-            output reg [2:0] Adress_source,
+            output reg       M_MEM_Adress,
             output reg       M_ULAA,
             output reg [1:0] M_ULAB,
-            output reg [1:0] M_REG_adress;
-            output reg [2:0] M_REG_data;
+            output reg [1:0] M_REG_adress,
+            output reg [2:0] M_REG_data,
     //
     // RESETA MODULOS
             output wire reset_out
@@ -37,15 +36,19 @@ module unidade_controle(
 
 // DECLARACOES
     // VARIAVEIS 
-        reg [2:0] COUNTER;
+        reg [3:0] COUNTER;
         reg [3:0] STATE;
     // 
     // Estados principais da maquina 
         parameter ST_BUSCA  = 5'd0;
         parameter ST_ULA    = 5'd1;
-       // parameter ST_JUMP   = 5'2d;
+        parameter ST_JR     = 5'd2;
         parameter ST_RESET  = 5'd3;
-        //parameter ST_BACK   = 5'd4;
+        parameter ST_OUTRO  = 5'd4;
+        //parameter ST_BACK = 5'd4;
+    //
+    // FUNCS
+        //parameter 
     //
     // OPCODES
         parameter R     = 6'h0;
@@ -55,11 +58,11 @@ module unidade_controle(
         parameter BNE   = 6'h5;
         parameter BLE   = 6'h6;
         parameter BGT   = 6'h7;
+        parameter LUI   = 6'hf;
 
         //[LOADS/STORES]
             // parameter LB = 6'h20;
             // parameter LH = 6'h21;
-            // parameter LUI = 6'hf;
             // parameter LW = 6'h23;
             // parameter SB = 6'h28;
             // parameter SH = 6'h29;
@@ -74,10 +77,10 @@ module unidade_controle(
 
 initial begin
     // Tambem deve resetar pilha
-    Adress_source = 3'd0;
+    M_MEM_Adress = 3'd0;
     PC_source = 1'b0;
     can_write = 6'd0;
-    COUNTER = 3'd0;
+    COUNTER = 4'd0;
     M_ULAB = 2'd1;
     M_ULAA = 1'b0;
     STATE = ST_BUSCA;
@@ -96,19 +99,19 @@ always @(posedge clk) begin
         can_write = 6'd0;
         M_ULAA = 1'b0;
         M_ULAB = 2'b00;
-        COUNTER = 3'd0;
+        COUNTER = 4'd0;
     end
     
     else begin // FORA DO reset
 
 
-        if (STATE == ST_BUSCA)  // #0
+        if (STATE == ST_BUSCA)  // #0 - BUSCA E DECODIFICACAO
         begin
             if (COUNTER == 0 || COUNTER == 1 || COUNTER == 2)    // BUSCA
             begin
                 COUNTER = COUNTER + 1;
-                Adress_source = 0;      // LE PC
-                can_write = 6'b000100;   // LIBERA instr PARA ESCRITA
+                M_MEM_Adress = 0;      // LE PC
+                can_write = 7'b000100;   // LIBERA instr PARA ESCRITA
 
                 // ZERA OUTRAS SAIDAS
                     PC_source = 1'b0;
@@ -117,87 +120,153 @@ always @(posedge clk) begin
                 //                    
             end else if (COUNTER == 3)  // TROCA DE ESTADO
             begin
-                COUNTER = 3'd0;
+                COUNTER = 4'd0;
+                STATE = ST_OUTRO;
+                
                 case(OPCODE)
                         RESET:  STATE = ST_RESET;
-                        R:
-                        default:STATE = ST_ULA;
+                            R:  STATE = ST_ULA;
+                         ADDI:  STATE = ST_ULA;
+                        ADDIU:  STATE = ST_ULA;
                 endcase                    
             end
         end else
         
-        if (STATE == ST_ULA)    // #1
+        if (STATE == ST_ULA)    // #1 - ADD, AND, SUB, ADDI, ADDIU
         begin
-                if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2) // SELECIONA A E B
-                begin       
+                // CHOSE A/B
+                if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2) begin
                     COUNTER = COUNTER + 1;
+                    can_write = 7'b0100000; // WRITE ALUout
 
-                    // ZERA OUTRAS SAIDAS
-                        PC_source = 1'b0;
-                        can_write = 6'd0;
+                    // SELECT A/B  
+                        M_ULAA = 1;
+                        if(OPCODE == 6'd0) begin    // TIPO R
+                            M_ULAB = 2'd0;              // SELECT REG2
+                        end else begin              // TIPO I
+                            M_ULAB = 2'd2;              // SELECT SIGN_EXTEND
+                        end
                     //
-                    M_ULAA = 1;
-                    if(OPCODE == 6'd0)    // TIPO R
-                        M_ULAB = 2'd0;
-                    else                // TIPO I
-                        M_ULAB = 2'd2;
-                        
-                
                 //
-                end else if(COUNTER == 3) begin // DIRECIONA RESULTADO
+                // SEND ALUOUT TO REG_IN
+                end else if(COUNTER == 3) begin 
                     COUNTER = COUNTER + 1;
-                    Adress_source = 3'd1;
+                    can_write = 7'b0100000; // WRITE ALUout  
+                    M_REG_data = 3'd1;      // SELECT ALUout
 
-                    // ZERA OUTRAS SAIDAS
-                        PC_source = 1'b0;
-                        can_write = 6'd0;
+                    // SELECT A/B  
+                        M_ULAA = 1;
+                        if(OPCODE == 6'd0) begin    // TIPO R
+                            M_ULAB = 2'd0;              // SELECT REG2
+                            M_REG_adress = 2'd1;        // SELECT REG TO WRITE 
+                        end else begin              // TIPO I
+                            M_ULAB = 2'd2;              // SELECT SIGN_EXTEND
+                            M_REG_adress = 2'd0;        // SELECT REG TO WRITE 
+                        end
                     //
-                    M_ULAA = 1;
-                    if(OPCODE==6'd0)    // TIPO R
-                        M_ULAB = 2'd0;
-                    else                // TIPO I
-                        M_ULAB = 2'd2;
-                end else if(COUNTER == 4) begin // ESCREVE RESULTADO
-                    can_write = 6'b000010;
-                    Adress_source = 3'd1;
-
-                    M_ULAA = 1;
-                    if(OPCODE==6'd0)    // TIPO R
-                        M_ULAB = 2'd0;
-                    else                // TIPO I
-                        M_ULAB = 2'd2;
-
-                    // ZERA OUTRAS SAIDAS
-
+                //
+                // WRITE RESULT
+                end else if(COUNTER == 4 || COUNTER == 5) begin 
                     COUNTER = COUNTER + 1;
-                end else if(COUNTER == 5) begin // PC + 4 CALCULADO
-                    COUNTER = COUNTER + 1;
-                    PC_source = 1;
-                    can_write = 6'd100000;
-                    // ZERA OUTRAS SAIDAS
+                    can_write = 7'b0001000; // WRITE REGs
+
+                    // SELECT REG TO WRITE
+                        M_REG_data = 3'd1;      // SELECT ALUout
+
+                        if(OPCODE == 6'd0) begin    // TIPO R
+                            M_REG_adress = 2'd1;        // SELECT 15to11
+                        end else begin              // TIPO I
+                            M_REG_adress = 2'd0;        // SELECT 25to21
+                        end
                     //
-                    M_ULAA = 1;
-                    M_ULAB = 2'd1;
-                end else if( COUNTER == 6) begin// PC + 4 ESCRITO
+                    // SELECT A/B  
+                        M_ULAA = 1;
+                        if(OPCODE == 6'd0) begin    // TIPO R
+                            M_ULAB = 2'd0;              // SELECT REG2
+                            M_REG_adress = 2'd1;        // SELECT REG TO WRITE 
+                        end else begin              // TIPO I
+                            M_ULAB = 2'd2;              // SELECT SIGN_EXTEND
+                            M_REG_adress = 2'd0;        // SELECT REG TO WRITE 
+                        end
+                //
+                // PC + 4
+                end else if(COUNTER == 6 || COUNTER == 7) begin
                     COUNTER = COUNTER + 1;
-                    PC_source = 1;
-                    can_write = 6'b000001;
-                    // ZERA OUTRAS SAIDAS
+                    can_write = 7'b0100000; // WRITE ALUOUT
+                    // SELECT PC SOURCES
+                        PC_source = 0;  //ALUOUT
+                        M_ULAA = 0;     //PC
+                        M_ULAB = 2'd1;  //+4
                     //
-                    M_ULAA = 1;
-                    M_ULAB = 2'd1;
-                end else begin                  // MUDA O ESTADO
-                    can_write = 6'd0;
-                    COUNTER = 3'd0;
-                    
-                    PC_source = 0;
-                    STATE = ST_BUSCA;
+                //
+                // WRITE PC + 4
+                end else if(COUNTER == 8) begin
+                    COUNTER = COUNTER + 1;
+                    can_write = 7'b0000001; // WRITE PC
+
+                    // SELECT PC SOURCES
+                        PC_source = 0;  //ALUOUT
+                        M_ULAA = 0;     //PC
+                        M_ULAB = 2'd1;  //+4
+                    //
+                //
+                // GO TO INITIAL_STATE
+                end else begin
+                    STATE = ST_BUSCA;   // INITIAL STATE
+                    can_write = 7'd0;   // CANT WRITE
+                    COUNTER = 4'd0;     // RESET
                 end
+        
         end else
-        if(STATE == ST_JR) begin
+
+        if(STATE == ST_JR)      // #2 - JUMP
+        begin
             if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2)
             begin
                 
+            end
+        end else
+
+
+
+        if(OPCODE == LUI)       // OPCODE [0x2] -  LUI
+        begin            
+            // GET EXTEND SIGN
+            if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0001000; // WRITE REG
+
+                //  SELECT REG TO WRITE
+                    M_REG_adress = 2'd0;    // SELECT REG TO WRITE 
+                    M_REG_data = 3'd6;      // SELECT SIGN EXTEND
+                //
+            //
+            // PC + 4
+            end else if(COUNTER == 3 || COUNTER == 4) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0100000; // WRITE ALUOUT
+                // SELECT PC SOURCES
+                    PC_source = 0;  //ALUOUT
+                    M_ULAA = 0;     //PC
+                    M_ULAB = 2'd1;  //+4
+                //
+            //
+            // WRITE PC + 4
+            end else if(COUNTER == 5) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0000001; // WRITE PC
+
+                // SELECT PC SOURCES
+                    PC_source = 0;  //ALUOUT
+                    M_ULAA = 0;     //PC
+                    M_ULAB = 2'd1;  //+4
+                //
+            //
+            // GO TO INITIAL_STATE
+            end else begin
+                STATE = ST_BUSCA;   // INITIAL STATE
+                can_write = 7'd0;   // CANT WRITE
+                COUNTER = 4'd0;     // RESET
             end
         end
 
