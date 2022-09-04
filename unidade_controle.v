@@ -38,22 +38,28 @@ module unidade_controle(
     // VARIAVEIS 
         reg [3:0] COUNTER;
         reg [3:0] STATE;
+        reg do_BRANCH;
     // 
     // Estados principais da maquina 
         parameter ST_BUSCA  = 5'd0;
         parameter ST_ULA    = 5'd1;
         parameter ST_JR     = 5'd2;
         parameter ST_RESET  = 5'd3;
-        parameter ST_OUTRO  = 5'd4;
+        parameter ST_BRANCH = 5'd4;
+
+        parameter ST_OUTRO  = 5'd10;
         //parameter ST_BACK = 5'd4;
     //
     // FUNCS
-        //parameter 
+        parameter ADD = 5'h20;
+        parameter AND = 5'h24;
+        parameter SUB = 5'h22;        
     //
     // OPCODES
         parameter R     = 6'h0;
         parameter ADDI  = 6'h8;
         parameter ADDIU = 6'h9;
+
         parameter BEQ   = 6'h4;
         parameter BNE   = 6'h5;
         parameter BLE   = 6'h6;
@@ -107,7 +113,8 @@ always @(posedge clk) begin
 
         if (STATE == ST_BUSCA)  // #0 - BUSCA E DECODIFICACAO
         begin
-            if (COUNTER == 0 || COUNTER == 1 || COUNTER == 2)    // BUSCA
+            // BUSCA
+            if (COUNTER == 0 || COUNTER == 1 || COUNTER == 2)    
             begin
                 COUNTER = COUNTER + 1;
                 M_MEM_Adress = 0;      // LE PC
@@ -118,7 +125,10 @@ always @(posedge clk) begin
                     M_ULAB = 2'd0;
                     M_ULAA = 1'b0;
                 //                    
-            end else if (COUNTER == 3)  // TROCA DE ESTADO
+            end else
+            //
+            // TROCA DE ESTADO
+            if (COUNTER == 3)
             begin
                 COUNTER = 4'd0;
                 STATE = ST_OUTRO;
@@ -128,7 +138,12 @@ always @(posedge clk) begin
                             R:  STATE = ST_ULA;
                          ADDI:  STATE = ST_ULA;
                         ADDIU:  STATE = ST_ULA;
-                endcase                    
+
+                          BEQ:  STATE = ST_BRANCH;
+                          BNE:  STATE = ST_BRANCH;
+                          BLE:  STATE = ST_BRANCH;
+                          BGT:  STATE = ST_BRANCH;
+                endcase
             end
         end else
         
@@ -219,14 +234,71 @@ always @(posedge clk) begin
         
         end else
 
-        if(STATE == ST_JR)      // #2 - JUMP
+        if (STATE == ST_BRANCH) // #4 - BRANCHES
         begin
+
+            // CHOSE A/B
             if(COUNTER == 0 || COUNTER == 1 || COUNTER == 2)
             begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0100000; // WRITE ALUout
+                do_BRANCH = 0;
+
+                // SELECT A/B  
+                    M_ULAA = 1;
+                    if(OPCODE == 6'd0) begin    // TIPO R
+                        M_ULAB = 2'd0;              // SELECT REG2
+                    end else begin              // TIPO I
+                        M_ULAB = 2'd2;              // SELECT SIGN_EXTEND
+                    end
+                //
+            end else
+            //
+            // VALIDA BRANCH
+            if(COUNTER == 3)
+            begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'd0;
+                do_BRANCH = 0;
                 
+                //  FLAGS - <[0]OVERFLOW -  [1]NEGATIVE - [2]ZERO - [3]EQUAL - [4]MENOR [5]MAIOR>
+                case(OPCODE)
+                    5'h4:   do_BRANCH =  flags[3]; //BEQ 0x4 -  flag[3] [rs == rt]
+                    5'h5:   do_BRANCH = !flags[3]; //BNE 0x5 - !flag[3] [rs != rt]
+                    5'h6:   do_BRANCH = !flags[5]; //BLE 0x6 - !flag[5] [rs <= rt]
+                    5'd7:   do_BRANCH =  flags[5]; //BGT 0x7 -  flag[5] [rs > rt]
+                endcase
+            end else
+            //
+            // PC + [4/OFFSET]
+            if(COUNTER == 4 || COUNTER == 5) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0100000; // WRITE ALUOUT
+                // SELECT PC SOURCES
+                    PC_source = 0;  //ALUOUT
+                    M_ULAA = 0;     //PC
+                    
+                    M_ULAB = {do_BRANCH? 2'd2 : 2'd1 };  //[ OFFSET | 4 ]
+                //
+            //
+            // WRITE PC + [4/OFFSET]
+            end else if(COUNTER == 6) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0000001; // WRITE PC
+
+                // SELECT PC SOURCES
+                    PC_source = 0;  //ALUOUT
+                    M_ULAA = 0;     //PC
+                    M_ULAB = {do_BRANCH? 2'd2 : 2'd1 };  //[ OFFSET | 4 ]
+                //
+            //
+            // GO TO INITIAL_STATE
+            end else begin
+                STATE = ST_BUSCA;   // INITIAL STATE
+                can_write = 7'd0;   // CANT WRITE
+                COUNTER = 4'd0;     // RESET
             end
         end else
-
 
 
         if(OPCODE == LUI)       // OPCODE [0x2] -  LUI
@@ -270,7 +342,40 @@ always @(posedge clk) begin
             end
         end
 
+        // SE NÃO ENCONTRAR FUNCAO
+        /*
+        if (COUNTER == 0 || COUNTER == 1) begin
+            STATE = ST_BUSCA;
+            can_write = 8'd0;
+            COUNTER = 3'd0;
+                        // PC + 4
+            end else if(COUNTER == 3 || COUNTER == 4) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0100000; // WRITE ALUOUT
+                // SELECT PC SOURCES
+                    PC_source = 0;  //ALUOUT
+                    M_ULAA = 0;     //PC
+                    M_ULAB = 2'd1;  //+4
+                //
+            //
+            // WRITE PC + 4
+            end else if(COUNTER == 5) begin
+                COUNTER = COUNTER + 1;
+                can_write = 7'b0000001; // WRITE PC
 
+                // SELECT PC SOURCES
+                    PC_source = 0;  //ALUOUT
+                    M_ULAA = 0;     //PC
+                    M_ULAB = 2'd1;  //+4
+                //
+            //
+            // GO TO INITIAL_STATE
+            end else begin
+                STATE = ST_BUSCA;   // INITIAL STATE
+                can_write = 7'd0;   // CANT WRITE
+                COUNTER = 4'd0;     // RESET
+            end
+        end*/
 
     end
 end

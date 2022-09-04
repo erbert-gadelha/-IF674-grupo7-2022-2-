@@ -1,5 +1,6 @@
 module cpu( input wire clock,
-            input wire reset );
+            input wire reset
+        );
 //
 
 
